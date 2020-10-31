@@ -1,7 +1,4 @@
-# logViewer
 A realtime log viewer application using NodeJs, Angular and Socket.io
-
-
 Steps to run:
 1. Open logViewerApi project.
 2. run npm install
