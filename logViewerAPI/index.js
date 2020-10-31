@@ -5,8 +5,7 @@ const fs = require('fs');
 
 const logger = require('./logger');
 
-logger();
-
+setInterval(()=>logger(),1000)
 
 io.on('connection', (socket) => {
 
@@ -17,19 +16,17 @@ io.on('connection', (socket) => {
 
     socket.on('my message', (msg) => {
         console.log('message: ' + msg);
-
-        setInterval( ()=>{
-            fs.readFile('server.log', 'utf8', function (err,data) {
-                if (err) {
-                  return console.log(err);
-                }
-                io.emit('my broadcast', `${data}`);
-              });
-        },1000)
     });
+
+    fs.watchFile('server.log',{
+      persistent: true,
+      interval: 1000,
+    }, ()=>{
+      fs.readFile('server.log', 'utf8', (err,data) => {
+        io.emit('my broadcast', `${data}`);
+      });
+    })
   });
-
-
 
 http.listen(3000,()=>{
     console.log('listening on 3000');
